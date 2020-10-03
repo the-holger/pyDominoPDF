@@ -54,7 +54,7 @@ def GenerateValidDominos(Start = 0, End = 4095):
 
         #The specified domino passed all rules and is valid.
         ValidValues.append(x)
-        logging.debug("Passed: Added Value {}({}) to list.\n---" . format(x, DPips.bin))
+        logging.debug("Passed: Added Value {} ({}) to list.\n---" . format(x, DPips.bin))
 
     logging.debug(ValidValues)
     return ValidValues
