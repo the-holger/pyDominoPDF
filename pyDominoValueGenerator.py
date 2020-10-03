@@ -11,13 +11,11 @@ Valid_Dominos = [63, 95, 111, 119, 123, 125, 126, 159, 175, 183, 187, 189, 190, 
 def GenerateValidDominos(Start = 0, End = 4095):
     logging.debug("Checking Domino Values from {} to {}" . format(Start, End))
 
-    bPass = 1
     Row1 = 0
     Row2 = 0
     ValidValues = []
 
     for x in range(Start,(End+1),1):
-        bPass = True
         DPips = BitArray('0x000')
         DPips.uint = x
         Row1 = DPips[:6]
@@ -28,12 +26,13 @@ def GenerateValidDominos(Start = 0, End = 4095):
         R1_PC = len(list(Row1.findall([1])))
         R2_PC = len(list(Row2.findall([1])))
 
-        #Total pips between rows must be 6.
-        if (R1_PC + R2_PC) != 6: bPass = False
-
         logging.debug("Row 1 Value:{} Binary Value:{} Pip Count:{}" .format(Row1.uint, Row1.bin, R1_PC))
         logging.debug("Row 2 Value:{} Binary Value:{} Pip Count:{}" .format(Row2.uint, Row2.bin, R2_PC))
-        logging.debug("Pip count validity: {}" . format(bPass))
+        
+        #Total pips between rows must be 6.
+        if (R1_PC + R2_PC) != 6:
+            logging.debug("Pip count invalid\n---")
+            continue
 
         #Generate the reverse of the bit stream.
         DFlip = BitArray('0x000')
@@ -45,21 +44,17 @@ def GenerateValidDominos(Start = 0, End = 4095):
 
         #The domino is a mirror iamge of itself and is invalid.
         if (ReversedValue == x):
-            logging.debug("Fail: Mirror Domino")
-            bPass = False
+            logging.debug("Fail: Mirror Domino\n---")
+            continue
         
         #The rotated domino exists as a prior value.
         if (ReversedValue in ValidValues):
-            logging.debug("Fail: Exists previously (rotated)")
-            bPass = False
+            logging.debug("Fail: Exists previously (rotated)\n---")
+            continue
 
         #The specified domino passed all rules and is valid.
-        if (bPass == True):
-            ValidValues.append(x)
-            logging.debug("Passed: Added Value {}({}) to list." . format(x, DPips.bin))
-
-
-        logging.debug("---")
+        ValidValues.append(x)
+        logging.debug("Passed: Added Value {}({}) to list.\n---" . format(x, DPips.bin))
 
     logging.debug(ValidValues)
     return ValidValues
