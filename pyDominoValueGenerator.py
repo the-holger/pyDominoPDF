@@ -15,12 +15,12 @@ def GenerateValidDominos(Start = 0, End = 4095):
     Row2 = 0
     ValidValues = []
 
-    for x in range(Start,(End+1),1):
+    for domino_number in range(Start,(End+1),1):
         DPips = BitArray('0x000')
-        DPips.uint = x
+        DPips.uint = domino_number
         Row1 = DPips[:6]
         Row2 = DPips[-6:]
-        logging.debug("Index Value:{} Binary Value:{}" .format(x,DPips.bin))
+        logging.debug("Index Value:{} Binary Value:{}" .format(domino_number,DPips.bin))
         
         #Row 1 and 2 Pip Count
         R1_PC = len(list(Row1.findall([1])))
@@ -36,14 +36,14 @@ def GenerateValidDominos(Start = 0, End = 4095):
 
         #Generate the reverse of the bit stream.
         DFlip = BitArray('0x000')
-        DFlip.uint = x
+        DFlip.uint = domino_number
         DFlip.reverse()
         ReversedValue = DFlip.uint
 
         logging.debug("Flipped Row Value:{} Binary Value:{}" .format(ReversedValue, DFlip.bin))        
 
         #The domino is a mirror iamge of itself and is invalid.
-        if (ReversedValue == x):
+        if (ReversedValue == domino_number):
             logging.debug("Fail: Mirror Domino\n---")
             continue
         
@@ -53,8 +53,8 @@ def GenerateValidDominos(Start = 0, End = 4095):
             continue
 
         #The specified domino passed all rules and is valid.
-        ValidValues.append(x)
-        logging.debug("Passed: Added Value {} ({}) to list.\n---" . format(x, DPips.bin))
+        ValidValues.append(domino_number)
+        logging.debug("Passed: Added Value {} ({}) to list.\n---" . format(domino_number, DPips.bin))
 
     logging.debug(ValidValues)
     return ValidValues
